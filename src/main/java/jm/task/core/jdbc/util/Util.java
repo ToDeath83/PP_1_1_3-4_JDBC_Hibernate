@@ -10,7 +10,6 @@ import org.hibernate.service.ServiceRegistry;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Properties;
 
 public class Util {
@@ -33,30 +32,37 @@ public class Util {
         }
         return connection;
     }
+    static SessionFactory sessionFactory = null;
+    static Configuration configuration;
+    static Properties properties;
 
+    public static SessionFactory getSessionFactory() {
 
-//    public static SessionFactory getSessionFactory() {
-//        SessionFactory sessionFactory =null;
-//        try {
-//            Configuration configuration = new Configuration();
-//            Properties properties = new Properties();
-//            properties.put(Environment.DRIVER, "com.mysql.jdbc.Driver");
-//            properties.put(Environment.URL, url);
-//            properties.put(Environment.USER, userName);
-//            properties.put(Environment.PASS, passWord);
-//
-//            configuration.setProperties(properties);
-//            configuration.addAnnotatedClass(User.class);
-//
-//            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-//                    .applySettings(configuration.getProperties()).build();
-//
-//            sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-//            System.out.println("Соединение созданно");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            System.out.println("Ошибка соединения");
-//        }
-//        return sessionFactory;
-//    }
+        try {
+            if (sessionFactory == null) {
+                configuration = new Configuration();
+                properties = new Properties();
+                properties.put(Environment.DRIVER, "com.mysql.jdbc.Driver");
+                properties.put(Environment.URL, url);
+                properties.put(Environment.USER, userName);
+                properties.put(Environment.PASS, passWord);
+                properties.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
+                //properties.put(Environment.SHOW_SQL, "true");
+                //properties.put(Environment.DIALECT, "org.hibernate.dialect.MySQLDialect");
+
+                configuration.setProperties(properties);
+                configuration.addAnnotatedClass(User.class);
+
+                ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+                        .applySettings(configuration.getProperties()).build();
+
+                sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+                System.out.println("Соединение созданно");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Ошибка соединения");
+        }
+        return sessionFactory;
+    }
 }
