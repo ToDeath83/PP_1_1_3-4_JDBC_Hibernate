@@ -25,7 +25,7 @@ public class UserDaoHibernateImpl extends Util implements UserDao {
                     " (id INT PRIMARY KEY AUTO_INCREMENT, name varchar(255), lastName varchar(255), age int)").executeUpdate();
             session.getTransaction().commit();
         } catch (Exception e) {
-            session.getTransaction().commit();
+            session.getTransaction().rollback();
         }
     }
 
@@ -37,7 +37,7 @@ public class UserDaoHibernateImpl extends Util implements UserDao {
             session.createSQLQuery("DROP TABLE IF EXISTS Users").executeUpdate();
             session.getTransaction().commit();
         } catch (Exception e) {
-            session.getTransaction().commit();
+            session.getTransaction().rollback();
         }
     }
 
@@ -51,7 +51,7 @@ public class UserDaoHibernateImpl extends Util implements UserDao {
             session.getTransaction().commit();
             System.out.println("User с именем – " + name + " добавлен в базу данных");
         } catch (Exception e) {
-            session.getTransaction().commit();
+            session.getTransaction().rollback();
         }
     }
 
@@ -63,7 +63,7 @@ public class UserDaoHibernateImpl extends Util implements UserDao {
             session.remove(session.get(User.class, id));
             session.getTransaction().commit();
         } catch (Exception e) {
-            session.getTransaction().commit();
+            session.getTransaction().rollback();
         }
     }
 
@@ -77,7 +77,7 @@ public class UserDaoHibernateImpl extends Util implements UserDao {
             session.getTransaction().commit();
             return list;
         } catch (Exception e) {
-            session.getTransaction().commit();
+            session.getTransaction().rollback();
         }
         return list;
     }
@@ -90,7 +90,7 @@ public class UserDaoHibernateImpl extends Util implements UserDao {
             session.createQuery("delete User").executeUpdate();
             session.getTransaction().commit();
         } catch (Exception e) {
-            session.getTransaction().commit();
+            session.getTransaction().rollback();
         }
     }
 }
